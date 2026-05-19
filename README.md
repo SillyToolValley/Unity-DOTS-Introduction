@@ -1,6 +1,6 @@
-# Unity DOTS Manual 📚
+# Unity DOTS Introduction 📚
 
-A community manual for **Unity DOTS** (Data-Oriented Technology Stack) — concepts, workflows, Netcode for Entities, optimizations, and 1.x → 6.5 migration. Targets **Entities 6.5.0** and **Netcode for Entities 6.5.0** on **Unity 6000.5+**.
+A community introduction for **Unity DOTS** (Data-Oriented Technology Stack) — concepts, workflows, Netcode for Entities, optimizations, and 1.x → 6.5 migration. Targets **Entities 6.5.0** and **Netcode for Entities 6.5.0** on **Unity 6000.5+**.
 
 > **Project Environment:** Unity **6000.5.0b2** · Entities **6.5.0** · Netcode for Entities **6.5.0** · Collections / Entities Graphics / Unity Physics (Core Packages) · Mathematics 1.4.x
 
@@ -13,7 +13,7 @@ A community manual for **Unity DOTS** (Data-Oriented Technology Stack) — conce
 ## 📂 Folder Structure
 
 ```
-unity-dots-manual/
+unity-dots-introduction/
 ├─ Getting Started/
 │  ├─ 01_Environment Setup (Unity 6000.5 + Entities 6.5.0).md
 │  ├─ 02_Core Packages Explained.md
