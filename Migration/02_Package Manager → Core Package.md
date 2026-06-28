@@ -1,6 +1,6 @@
 ---
 title: Package Manager → Core Package
-updated: 2026-04-28
+updated: 2026-06-28
 folder: Migration
 ---
 
@@ -11,11 +11,11 @@ folder: Migration
 
 ## 1. What changes
 
-On Unity 6000.4+, Entities (and its companion DOTS packages) stop being installed via the Package Manager. They ship inside the Editor as **Core Packages**. Your project files change in three places:
+On Unity 6000.4+, Entities (and its companion DOTS packages) become **Core Packages** — they ship inside the Editor. You still install them from the Package Manager (under **Unity Registry**), but the Editor controls their version: whatever you request in `manifest.json` is ignored and resolved to the bundled core version. Your project files reflect this in three places:
 
-- **`Packages/manifest.json`** — the `com.unity.entities*` entries are removed.
-- **`Packages/packages-lock.json`** — the resolved graph shrinks; affected packages appear with `"source": "builtin"`.
-- **Package Manager window** — the packages now appear under "In Project" labelled **Built-in**.
+- **`Packages/manifest.json`** — `com.unity.entities*` entries may stay; their version strings are now ignored (the Editor overrides them). Removing them is optional cleanup, not required.
+- **`Packages/packages-lock.json`** — affected packages resolve with `"source": "builtin"` (no download `url`).
+- **Package Manager window** — the packages appear under "In Project" with the Editor's version, and stay removable. They are **not** in the "Built-in" list (that list is engine modules, `com.unity.modules.*`).
 
 Your C# code does **not** change. Assembly names (`Unity.Entities`, `Unity.Collections`, etc.) are the same; `.asmdef` references are unchanged.
 
@@ -65,7 +65,7 @@ Open `Packages/manifest.json`. It looks something like:
 }
 ```
 
-Remove the lines that are now Core Packages:
+Optionally remove the lines that are now Core Packages — this is cleanup only. Leaving them is harmless: the Editor ignores their version and resolves the bundled core version anyway.
 
 ```diff
  {
@@ -116,7 +116,7 @@ Note the `"source": "builtin"` — that's the tell that the package is now a Cor
 
 ## 5. Verifying the result
 
-1. **Package Manager window** (`Window → Package Manager` → "In Project") — Entities, Collections, Entities Graphics, Unity Physics, and Netcode for Entities should appear tagged **Built-in** on their matching Core Package Editor versions.
+1. **Package Manager window** (`Window → Package Manager` → "In Project") — Entities, Collections, Entities Graphics, Unity Physics, and Netcode for Entities appear under **In Project** with the Editor's version (e.g. Entities 6.5.0), and stay removable. They are **not** in the Package Manager's "Built-in" list — that list holds only engine modules (`com.unity.modules.*`). The `builtin` source shows in `packages-lock.json`, not as a Package Manager label.
 2. **Editor menus** — `Window → Entities → Hierarchy/Systems/Archetypes` exist and work.
 3. **Compile** — press Play; the project should enter Play mode with no compile errors referencing missing assemblies.
 

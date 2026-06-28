@@ -1,6 +1,6 @@
 ---
 title: Core Packages Explained
-updated: 2026-04-28
+updated: 2026-06-28
 folder: Getting Started
 ---
 
@@ -27,16 +27,18 @@ This page explains:
 
 ## 2. What is a Core Package?
 
-A **Core Package** is a package that ships **inside the Editor**. You do not add it via the Package Manager, you cannot change its version independently of the Editor, and its release cadence is the Editor's.
+A **Core Package** ships **inside the Editor**. You still install it through the Package Manager — it is listed under **Unity Registry**, the same as any other package — but you **cannot choose its version**: the Editor resolves it to its own bundled copy (`source: builtin` in `packages-lock.json`) and ignores whatever version you request. Its release cadence is the Editor's.
 
-| Trait | Package Manager package | Core Package |
-|-------|-------------------------|--------------|
-| Install step | Add via UPM | None — present with the Editor |
-| Version chosen by | You, in `manifest.json` | Unity, per Editor version |
-| Release cadence | UPM independent | Editor releases |
-| Appears in `manifest.json` | Yes | No |
-| Appears in `packages-lock.json` | Yes | Yes, marked as `builtin` |
-| Shown in Package Manager | Under "In Project" | Under "In Project" tagged **Built-in** |
+| Trait | Registry package | Core Package |
+|-------|------------------|--------------|
+| How you install it | Package Manager (Unity Registry) | Package Manager (Unity Registry) — same step |
+| Version chosen by | You, in `manifest.json` | The Editor — the version you request is ignored/overridden |
+| Downloaded from | `packages.unity.com` (a `url` in the lock) | Nothing downloaded — bundled with the Editor |
+| Release cadence | UPM, independent | Editor releases |
+| Appears in `manifest.json` | Yes | Yes (version string ignored) |
+| `source` in `packages-lock.json` | `registry` | `builtin` |
+| Shown in Package Manager | "In Project" / "Unity Registry" | "In Project" — **not** the "Built-in" list (that is engine modules only) |
+| Removable in Package Manager | Yes | Yes — Remove just deletes the `manifest.json` entry |
 
 ---
 
@@ -77,7 +79,7 @@ See [`Changelog/Entities 1.4 → 6.5 Key Changes.md`](../Changelog/Entities 1.4 
 
 ### `manifest.json`
 
-No `com.unity.entities`, `com.unity.collections`, `com.unity.entities.graphics`, `com.unity.physics`, or `com.unity.netcode` entries are needed on the matching Core Package Editor versions. Avoid direct `com.unity.mathematics` pins unless your project has a specific reason to override the Editor/package-set version. If you upgrade a 1.x project, see [`Migration/02_Package Manager → Core Package.md`](../Migration/02_Package Manager → Core Package.md).
+On the matching Core Package Editor versions, `com.unity.entities`, `com.unity.collections`, `com.unity.entities.graphics`, `com.unity.physics`, and `com.unity.netcode` may still appear in `manifest.json` — the Editor ignores the version you request and resolves each to its bundled core version. Removing those entries is optional cleanup, **not** required. Avoid direct `com.unity.mathematics` pins unless your project has a specific reason to override the Editor/package-set version. If you upgrade a 1.x project, see [`Migration/02_Package Manager → Core Package.md`](../Migration/02_Package Manager → Core Package.md).
 
 ### `packages-lock.json`
 
@@ -99,7 +101,7 @@ The stated goal is to let the ECS team ship features faster and more incremental
 
 | Symptom | Cause / Fix |
 |---------|-------------|
-| Package Manager still lists `Entities` under "Unity Registry" with an old version | You are on a pre-6000.4 Editor. Either upgrade the Editor, or stay on the 1.x line. |
+| Package Manager lists `Entities` under "Unity Registry" | Normal — that is where you install it. On 6000.4+ the Editor resolves it to the bundled core version (`source: builtin` in `packages-lock.json`) regardless of the version shown there. |
 | `manifest.json` resolve error after removing `com.unity.entities` | Delete `packages-lock.json`, let the Editor regenerate it. |
 | A sample or asset store package targets `com.unity.entities@1.x` | On 6000.5+ the 1.x API has mostly been superseded; check the Migration folder for equivalents. |
 | Two Editor installs report different Entities versions | Expected. Version is per Editor install. |
